@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyIAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: Darrius_CFM
+      Groups:
+        - !Ref DeveloperGroup
+
+  DeveloperGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName:  developer-cfm
+
+  S3ReadOnlyPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: developer-cfm-s3-list
+      Groups:
+        - !Ref DeveloperGroup
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+            - s3:ListAllMyBuckets
+            Resource: '*'
+
+  EC2PracticeRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      RoleName: ec2-practice-role-cfm
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
